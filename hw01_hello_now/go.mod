@@ -1,4 +1,4 @@
-module github.com/selestica/home_work/tree/master/hw01_hello_now
+module github.com/selestica/home_work/hw01_hello_now
 
 require (
 	bou.ke/monkey v1.0.2
