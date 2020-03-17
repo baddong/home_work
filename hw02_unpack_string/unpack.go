@@ -22,22 +22,24 @@ func Unpack(defaultString string) (string, error) {
 	// in this loop I use WriteString after I looked on char in next iteration
 	for _, defaultChar := range defaultString {
 		numberOfRepeats, _ = strconv.Atoi(string(defaultChar))
-		if unicode.IsDigit(defaultChar) {
+		switch {
+		case unicode.IsDigit(defaultChar):
 			if previousCharIsDigit {
 				return "", ErrInvalidString
 			}
 			previousCharIsDigit = true
-		} else if previousCharIsDigit {
+		case previousCharIsDigit:
 			repeatedChar = string(defaultChar)
 			previousCharIsDigit = false
 			continue
-		} else if !previousCharIsDigit  {
+		case !previousCharIsDigit:
 			previousCharIsDigit = false
 			numberOfRepeats = 1
 		}
 		unpackedString.WriteString(strings.Repeat(repeatedChar, numberOfRepeats))
 		repeatedChar = string(defaultChar)
 	}
+
 	result := unpackedString.String()
 	return result, nil
 }
