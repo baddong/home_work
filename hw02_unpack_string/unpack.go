@@ -7,37 +7,41 @@ import (
 	"unicode"
 )
 
-// ErrInvalidString returns if defaultString contains invalid characters
+// ErrInvalidString returns if input string contains invalid characters
 var ErrInvalidString = errors.New("invalid string")
 
 // Unpack formats the string according to the given format: "a4bc2d5e" => "aaaabccddddde"
-func Unpack(defaultString string) (string, error) {
+func Unpack(input string) (string, error) {
 	var unpackedString strings.Builder
-	var numberOfRepeats int
-	repeatedChar := ""
-	var previousCharIsDigit bool = false
+	var repeatsCount int
+	var repeatedCh string
+	var prevIsDigit bool
 
-	defaultString += "\n" // to successfully iterate over last char in "for" loop
+	input += "\n" // to successfully iterate over last char in "for" loop
+
+	if unicode.IsDigit(rune(input[0])) {
+		return "", ErrInvalidString
+	}
 
 	// in this loop I use WriteString after I looked on char in next iteration
-	for _, defaultChar := range defaultString {
-		numberOfRepeats, _ = strconv.Atoi(string(defaultChar))
+	for _, ch := range input {
+		repeatsCount, _ = strconv.Atoi(string(ch))
 		switch {
-		case unicode.IsDigit(defaultChar):
-			if previousCharIsDigit {
+		case unicode.IsDigit(ch):
+			if prevIsDigit {
 				return "", ErrInvalidString
 			}
-			previousCharIsDigit = true
-		case previousCharIsDigit:
-			repeatedChar = string(defaultChar)
-			previousCharIsDigit = false
+			prevIsDigit = true
+		case prevIsDigit:
+			repeatedCh = string(ch)
+			prevIsDigit = false
 			continue
-		case !previousCharIsDigit:
-			previousCharIsDigit = false
-			numberOfRepeats = 1
+		case !prevIsDigit:
+			prevIsDigit = false
+			repeatsCount = 1
 		}
-		unpackedString.WriteString(strings.Repeat(repeatedChar, numberOfRepeats))
-		repeatedChar = string(defaultChar)
+		unpackedString.WriteString(strings.Repeat(repeatedCh, repeatsCount))
+		repeatedCh = string(ch)
 	}
 
 	result := unpackedString.String()
