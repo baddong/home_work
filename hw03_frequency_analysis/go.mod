@@ -1,4 +1,4 @@
-module github.com/selestica/hw03_frequency_analysis
+module github.com/selestica/home_work/hw03_frequency_analysis
 
 go 1.14
 
