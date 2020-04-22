@@ -22,7 +22,6 @@ func TestList(t *testing.T) {
 		l.PushBack(20)  // [10, 20]
 		l.PushBack(30)  // [10, 20, 30]
 		require.Equal(t, l.Len(), 3)
-
 		middle := l.Back().Next // 20
 		l.Remove(middle)        // [10, 30]
 		require.Equal(t, l.Len(), 2)
@@ -47,5 +46,57 @@ func TestList(t *testing.T) {
 			elems = append(elems, i.Value.(int))
 		}
 		require.Equal(t, []int{50, 30, 10, 40, 60, 80, 70}, elems)
+	})
+
+	t.Run("remove all front items", func(t *testing.T) {
+		l := NewList()
+
+		l.PushFront(10) // [10]
+		l.PushBack(20)  // [10, 20]
+		l.Remove(l.Front())
+		l.Remove(l.Front())
+		require.Equal(t, l.Len(), 0)
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+	})
+
+	t.Run("remove all back items", func(t *testing.T) {
+		l := NewList()
+
+		l.PushFront(10) // [10]
+		l.PushBack(20)  // [10, 20]
+		l.Remove(l.Back())
+		l.Remove(l.Back())
+		require.Equal(t, l.Len(), 0)
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
+	})
+	t.Run("MoveToFront back item of 2 items", func(t *testing.T) {
+		l := NewList()
+
+		l.PushBack(20)
+		l.PushFront(10)
+
+		l.MoveToFront(l.Back())
+		elems := make([]int, 0, l.Len())
+		for i := l.Back(); i != nil; i = i.Next {
+			elems = append(elems, i.Value.(int))
+		}
+		require.Equal(t, []int{10, 20}, elems)
+	})
+	t.Run("MoveToFront middle item of 3 items", func(t *testing.T) {
+		l := NewList()
+
+		l.PushBack(20)
+		l.PushFront(10)
+		l.PushFront(30)
+
+		middle := l.Back().Next
+		l.MoveToFront(middle)
+		elems := make([]int, 0, l.Len())
+		for i := l.Back(); i != nil; i = i.Next {
+			elems = append(elems, i.Value.(int))
+		}
+		require.Equal(t, []int{20, 30, 10}, elems)
 	})
 }
