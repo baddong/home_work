@@ -57,4 +57,29 @@ func TestTop10(t *testing.T) {
 			assert.ElementsMatch(t, expected, Top10(text))
 		}
 	})
+	t.Run("max 10 words in result", func(t *testing.T) {
+		expected := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}
+		assert.Subset(t, expected, Top10("1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 10 11"))
+	})
+	t.Run("new line and tab", func(t *testing.T) {
+		expected := []string{}
+		assert.Subset(t, expected, Top10(" \n	 "))
+	})
+	t.Run("one space", func(t *testing.T) {
+		expected := []string{}
+		assert.Subset(t, expected, Top10(" "))
+	})
+	t.Run("numbers", func(t *testing.T) {
+		expected := []string{"0", "a", "1"}
+		assert.Subset(t, expected, Top10("0 0 0 1 a a"))
+	})
+	t.Run("one dash", func(t *testing.T) {
+		expected := []string{"-"}
+		assert.Subset(t, expected, Top10("-"))
+	})
+	t.Run("special symbols", func(t *testing.T) {
+		expected := []string{"#", "$", "!", "^", "*", "%"}
+		assert.Subset(t, expected, Top10("# $ % $ * ^ ! "))
+	})
+
 }
