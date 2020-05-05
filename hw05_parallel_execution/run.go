@@ -9,7 +9,7 @@ var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
 
 type Task func() error
 
-// Run starts tasks in N goroutines and stops its work when receiving M errors from tasks
+// Run starts tasks in N goroutines and stops its work when receiving M errors.
 func Run(tasks []Task, n int, m int) error {
 	var errCount int
 	taskCh := make(chan Task, len(tasks))
